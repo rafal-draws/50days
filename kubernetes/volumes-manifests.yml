@@ -1,0 +1,96 @@
+### VOLUMES
+## EPHEMERAL
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-ephemeral-volume-and-command
+spec:
+  volumes:
+  - name: logs-volume
+    emptyDir: {}
+
+  containers:
+  - name: container-name
+    image: busybox:1.36.1
+    args:
+    - /bin/sh
+    - -c
+    - 'while true; echo $RANDOM >> /var/log/data.log; sleep 60'
+    volumeMounts:
+    - mountPath: /var/log
+      name: logs-volume
+---
+## PERSISTENT VOLUME
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: persistentVolume
+
+spec:
+  capacity:
+    storage: 5Gi
+
+  volumeMode: Filesystem
+
+  accessModes:
+    - ReadWriteOnce 
+    #- ReadOnlyMany
+    #- ReadWriteMany
+    #- ReadWriteOncePod
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: standard
+
+  hostPath:
+    path: /data/db
+
+---
+## STORAGE CLASS
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
+  replication-type: regional-pd
+
+
+---
+## PERSISTENT VOLUME CLAIM
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-pvc
+
+spec: 
+  accessModes:
+  - ReadWriteOnce
+
+  storageClassName: "" # OR PROVIDE STORAGE CLASS
+
+  resources:
+    requests:
+      storage: 256Mi
+
+---
+## POD USING PVC
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: pod-using-pvc
+
+spec:
+  volumes:
+  - name: app-storage
+    persistentVolumeClaim:
+      claimName: db-pvc
+
+  containers:
+    - image: alpine:3.18.2
+      name: app
+      command: ["/bin/sh"]
+      args: ["-c", "while true; do echo $RANDOM >> /mnt/data/out.log; done"]
+      volumeMounts:
+        - mountPath: "/mnt/data"
+          name: app-storage
