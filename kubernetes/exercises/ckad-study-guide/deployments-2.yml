@@ -2,17 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
+  labels:
+    tier: frontend
 
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx
+      app: nginx-frontend
   
   template:
     metadata:
       labels:
-        app: nginx
+        app: nginx-frontend
     spec:
       containers:
       - name: nginx-pod
@@ -21,6 +23,32 @@ spec:
           requests:
             cpu: 0.5
             memory: 500Mi        
-          limit:
+          limits:
             memory: 500Mi
 
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nginx-hpa
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nginx
+  minReplicas: 3
+  maxReplicas: 8
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 60
