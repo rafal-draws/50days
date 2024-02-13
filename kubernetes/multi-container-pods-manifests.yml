@@ -1,0 +1,96 @@
+### INIT CONTAINER
+# Used to provide initialization logic concerns to be run before the main applicaiton even starts
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-init-container
+
+spec:
+  volumes:
+  - name: <volumeName>
+    emptyDir: {}
+
+  initContianers:
+  - name: <initContainerName>
+    image: <imageName>
+    command: ['sh', '-c', 'echo "hi" >> /usr/shared/app/config.json']
+    volumeMounts:
+    - name: <volumeName>
+      mountPath: <f.e. "/usr/shared/app">
+
+  containers:
+  - image: <image>
+    name: <name>
+    ports:
+    - containerPort: <portNum>
+    volumeMounts:
+    - name: <volumeName>
+      mountPath: <f.e. "/usr/shared/app">
+
+
+---
+### SIDECAR PATTERN
+# Sidecar containers usually provide helper functionality to the primary application.
+# For example file synchronization, logging, watche capabilities
+# Usually not available in the public API
+# App container accepts requests -> writes to error.log -> Sidecar container cats the error.log -> sends notification
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sidecar-pattern
+spec:
+  containers:
+  
+  - name: <name>
+    image: <imageName>
+    volumeMounts:
+    - name: <volumeName>
+      mountPath: "/var/log/application"
+  
+  - name: sidecar
+    image: <imageName>
+    command: ['sh', 'monitor.sh']
+    volumeMounts:
+    - name: <volumeName>
+      mountPath: "/var/log/application"
+
+  volumes:
+  - name: logs-vol
+    emptyDir: {}
+
+---
+### ADAPTER PATTERN
+# Instead of adding features to the code to enable f.e. log normalization, we can use adapters
+# app writes to disk-space.txt -> adapter normalizes the data and enables API for 3rd party monitoring services
+#
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: adapter-pattern
+spec:
+  volumes:
+  - name: log-volume
+    emptyDir: {}
+
+  containers:
+  - name: main-app
+    image: image
+    volumeMounts:
+    - name: log-volume
+      mountPath: '/var/logs/volume'
+    command: ['sh', '-c', 'while true; do echo "$(date) |  $(du -sh)" >> /var/logs/volume/diskspace.out; sleep 60; done'
+    
+  - name: adapter
+    image: adapter-image
+    volumeMounts:
+    - name: log-volume
+      mountPath: '/var/logs/volume'
+    command: ['sh', '-c', 'normalize_and_send_logs.sh']
+
+
+
+### AMBASSADOR PATTERN
+# Basically a proxy :)
