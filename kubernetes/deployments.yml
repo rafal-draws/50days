@@ -1,0 +1,60 @@
+###
+# -- DEPLOYMENTS --
+#
+# k edit deployment <deploymentName>
+# k set image deployment <deploymentName> <containerName>=<image>
+# k replace -f deployment.yaml -> --force flag deletes the exisitng object and creates it from scratch
+# k patch deployment web server -p '{"spec":{"templatte":{"spec":{"containers":[{"name":"nginx","image":"nginx:1.25.2"}]}}}}'
+#
+# -- ROLLOUTS-- 
+#
+# k rollout history|status deployment <deploymentName>
+# k rollout history deployment <deploymentName> --revision=2
+#
+# k annotate deployment <deploymentName> kubernetes.io/change-cause="image updated to 2.15.52"
+#
+# -- ROLLBACK --
+# k rollout undo deployment <deploymentName> --to-revision=1
+#
+# -- SCALING --
+# k scale deployment <deploymentName> --replicas=6
+#
+###
+# example deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <deploymentName>
+  labels:       # REQUIRED
+    deploy: any-label-really
+
+spec:
+  replicas: <number>
+  selector:
+    matchLabels:
+      app: <label-value>              # ----- REQUIRED
+  template:                           #     | Maps the deployment
+    metadata:                         #     | to the pod template
+      labels:                         #     | used for replicas
+        app: <label-value>            # <----
+    spec:
+      containers:
+        - name: deployment
+          image: busybox:1.36.1
+
+###
+# -- AUTOSCALING A DEPLOYMENT --
+# |              |
+# |metrics server|                                        
+# |              |
+#     ↑                                                      
+#     | reads                                             creates
+#     |                                                       → Pod
+# |  Horizontal  | scales  |          |manages |          |  /
+# |     Pod      |-------→ |Deployment|-----→  |ReplicaSet|- -→ Pod
+# |  autoscaler  |         |          |        |          |  \ 
+#                                                             → Pod
+###
+#
+#
+#
