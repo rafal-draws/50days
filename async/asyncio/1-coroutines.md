@@ -29,3 +29,5 @@ But from our point of view, the **async def** function will simply return a valu
 ...
 The answer was: 123
 ```
+
+await syntax awaits awaitable, therefore implementing __await__() or calling the result of async def fucntion is required
