@@ -32,6 +32,7 @@ The answer was: 123
 await syntax awaits awaitable, therefore implementing __await__() or calling the result of async def fucntion is required
 
 so we can perform following:
+
 ```
 async def f():
     await asyncio.sleep(1.0)
@@ -41,6 +42,7 @@ async def main():
     result = await f()
     return result
 ```
+
 calling f() produces a coroutine, this means we are allowed to await it.
 
 
@@ -112,4 +114,33 @@ Future instance may also do the following:
 
 Even though Tasks are more common, you cant avoid Futures. 
 For instance, running a function on an executor will return Future instance, not a Task.
+
+
+Interaction with a Future instance:
+
+```
+import asyncio
+
+async def main(f: asyncio.Future):
+    await asyncio.sleep(1)
+    f.set_result('I have finished.')
+
+loop = asyncio.get\_event\_loop()
+fut = asyncio.Future()
+print(fut.done())
+# prints False
+
+loop.create\_task(main(fut))
+loop.run\_until\_complete(fut)
+# 'I have finished.'
+print(fut.done())
+# 'True'
+print(fut.result())
+#I have finished
+```
+
+You can either use asyncio.create\_task, or use asyncio.ensure\_future().
+
+
+
 

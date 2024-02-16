@@ -1,0 +1,151 @@
+###
+# Ramped Deployment Strategy
+#
+# worth remembering:
+# 
+# spec.strategy.rollingUpdate.maxUnavailable 
+# (max num of pods that can be unavailable during the update process)
+# 
+# spec.strategy.rollingUpdate.maxSurge 
+# (if set to 10%, the total number of new and old Pods cannot exceed a total of 110% afther the new ReplicaSet has been created).
+#
+# spec.minReadySeconds
+# (specifies the number of seconds a replica needs to be available before it is made available to incoming requests)
+#
+###
+# The tradeoff
+# - rolling out a new application version with zero downtime.
+# 
+# Risks?
+# Old and new versions of the application run in parallel.
+# Breaking changes introduced with the new version can lead to unexpected and hard-to-debug errors for consumers if they havent adapted their client software to the latest changes yet.
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server
+spec:
+  replicas: 4
+  stategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 40%
+      maxSurge: 10%
+    minReadySeconds: 60
+  
+  selector:
+    matchLabels:
+      app: httpd
+
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      containers:
+      - name: httpd
+        image: httpd:2.4.23-alpine
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+
+
+###
+# Fixed Deployment Strategy
+#
+# Terminates the replicas with the old application version at once before creating another ReplicaSet.
+#
+##
+# spec.strategy.type: Recreate
+# sets total number of replicas to the maxUnavailable.
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server
+spec:
+  replicas: 4
+  strategy:
+   type: Recreate
+  selector:
+    matchLabels:
+      app: httpd
+  template:
+    metadata:
+      labels:
+        app:httpd
+    spec:
+      containers:
+      - name: httpd
+        image: httpd:2.4.23-alpine
+        ports:
+        - containerPort: 80
+          protocol: TCP
+
+###
+# Blue-Green Deployment Strategy
+#
+# Both application version will be operated at the same time with an equal number of replicas.
+# Kubernetes routes traffic to the bluye deployment, while the green deployment is rolled out and tested by the development or test team.
+# Traffic will be switched over to the green depl as soon as it is considered production-ready. 
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server-blue
+spec:
+  replicas: 4
+  
+  selector:
+    matchLabels:
+      type: blue
+  
+  template:
+    metadata:
+      labels:
+        type: blue
+  spec:
+    containers:
+    - name: httpd
+      image: httpd:2.4.23-alpine
+      ports:
+      - containerPort: 80
+        protocol: HTTP
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server-green
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      type: green
+  template:
+    metadata:
+      labels:
+        type: green
+  spec:
+    containers:
+    - name: httpd
+      image: httpd:2.4.23-alpine
+      ports:
+      - containerPort: 80
+        protocol: TCP
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-server
+spec:
+  selector:
+    type: blue
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+
