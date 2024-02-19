@@ -1,0 +1,9 @@
+cars:
+- bmw
+- toyota
+- lexus
+- alfa-romeo
+- mercedes-benz
+
+urls:
+  base: "https://www.otomoto.pl/osobowe/"
