@@ -1,4 +1,4 @@
-# Excersises from @dgkanatsios on github
+# Exersises from @dgkanatsios on github
 ### https://github.com/dgkanatsios/CKAD-exercises/blob/main/a.core_concepts.md
 ## Core concepts - 13%
 

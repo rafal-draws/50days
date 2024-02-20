@@ -1,0 +1,15 @@
+orders:
+  - group:
+      name: elektronika
+      sort: nowe
+    tags:
+    - AMD
+    - AM5
+    - DDR5
+    receiver:
+    - rafal.w.draws@gmail.com
+
+
+
+sender:
+  smtp: some-mail@gmail.com

@@ -1,0 +1,158 @@
+{
+  "main": {
+    "id": "1de07499cdcd8b18",
+    "type": "split",
+    "children": [
+      {
+        "id": "0f96bdc3f8471999",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0677021610656c06",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "async/asyncio/1-coroutines.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "693f3f5a65376e73",
+    "type": "split",
+    "children": [
+      {
+        "id": "c6c4bfeabd381822",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "911946ff4970d34a",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "b713b9d35a8c97e1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "960a3f0b5b3111c1",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "048c08c76a9af55c",
+    "type": "split",
+    "children": [
+      {
+        "id": "c1668d6659266793",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2a277512f7149477",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "async/asyncio/1-coroutines.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "ae0aef013586b35e",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "async/asyncio/1-coroutines.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "1849982353c6fc79",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "4d74b8dba635da33",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "async/asyncio/1-coroutines.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "0677021610656c06",
+  "lastOpenFiles": [
+    "async/asyncio/excersises/cars.yml",
+    "async/asyncio/excersises/scraper.py~",
+    "async/asyncio/excersises/scraper.py",
+    "async/asyncio/general.md",
+    "async/asyncio/1-coroutines.md",
+    "kubernetes/exercises/ckad-execrises.md"
+  ]
+}

@@ -21,12 +21,8 @@ async def get_pages_count(session, manufacturer: str):
 async def main():
     
     async with aiohttp.ClientSession() as session:
-        await asyncio.gather(
-            get_pages_count(session, "bmw"),
-            get_pages_count(session, "alfa-romeo"),
-            get_pages_count(session, "lexus"),
-            get_pages_count(session, "toyota"),
-            )
+        tasks = [get_pages_count(session, manufacturer) for manufacturer in data['cars']]
+        await asyncio.gather(*tasks)
 
 
 if __name__ == "__main__":
